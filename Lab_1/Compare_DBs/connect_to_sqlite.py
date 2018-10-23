@@ -6,8 +6,7 @@ def create_a_number_of_tables(db, c):
 	col_name = 'col1'
 	field_type = 'INTEGER'
 	for i in range(0, 400):
-		c.execute('CREATE TABLE {tn} ({nf} {ft})'\
-		.format(tn=table_name+str(i), nf=col_name, ft=field_type))
+		c.execute('CREATE TABLE {tn} ({nf} {ft})'.format(tn=table_name+str(i), nf=col_name, ft=field_type))
 
 def insert_in_the_tables(db, c):
 	table_name = 't'
