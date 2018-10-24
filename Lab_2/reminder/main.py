@@ -11,6 +11,7 @@ TOKEN = '750371538:AAHmjwkqqAds28-5T7ssRgmOSzsxia14NXQ'
 bot = telepot.Bot(TOKEN)
 
 allreminder = {}
+brokenReminder = {}
 
 def function_that_reminds():
 	threading.Timer(1.0, function_that_reminds).start()
@@ -27,20 +28,22 @@ def function_that_reminds():
 
 def handle(msg):
 	content_type, chat_type, chat_id = telepot.glance(msg)
-	
-	bot.sendMessage(chat_id, 'testing custom keyboard',
-							reply_markup=ReplyKeyboardMarkup(
-								keyboard=[
-									[KeyboardButton(text="Add"), KeyboardButton(text="Remove")]
-								]
-							))
 
 	if not chat_id in allreminder.keys():
 		allreminder[chat_id] = {}
 
 	if content_type=='text':
-		if msg['text'] == '/Done':
-			bot.sendMessage(chat_id, 'you have the following reminders:')
+		if msg['text'] == '/start':
+			bot.sendMessage(chat_id, 
+							reply_markup=ReplyKeyboardMarkup(
+								keyboard=[
+									[KeyboardButton(text="Done"), KeyboardButton(text="All")]
+								]
+							))
+		elif msg['text'] == 'Done':
+			bot.sendMessage(chat_id, 'Reminders added!')
+		elif msg['text'] == 'All':
+			bot.sendMessage(chat_id, 'All reminders:')
 			for x in allreminder[chat_id].keys():
 				bot.sendMessage(chat_id, x+' '+allreminder[chat_id][x][0].strftime('%d/%m/%YT%H:%M'))
 		else:
@@ -60,6 +63,7 @@ def handle(msg):
 
 def mainFunc():
 	MessageLoop(bot, handle).run_as_thread()
+	
 	function_that_reminds()
 	print('Listening...')
 
