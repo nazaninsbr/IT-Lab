@@ -6,12 +6,17 @@ from telepot.namedtuple import ReplyKeyboardMarkup, KeyboardButton
 from datetime import datetime
 import threading
 import copy 
+from gtts import gTTS
+import sqlite3 
 
 TOKEN = '750371538:AAHmjwkqqAds28-5T7ssRgmOSzsxia14NXQ'
 bot = telepot.Bot(TOKEN)
 
 allreminder = {}
 brokenReminder = {}
+voice_message =  gTTS(text='Hi! this is a reminder', lang='en', slow=False)
+voice_message.save("reminder.mp3")
+
 
 def function_that_reminds():
 	threading.Timer(1.0, function_that_reminds).start()
@@ -23,6 +28,7 @@ def function_that_reminds():
 			reminder_time = this_all_reminders[chat_id][reminder][0].strftime('%d/%m/%YT%H:%M')
 			if reminder_time == now and this_all_reminders[chat_id][reminder][1]==False:
 				bot.sendMessage(chat_id, reminder)
+				bot.sendAudio(chat_id, open('reminder.mp3', 'rb'), title='reminder')
 				this_all_reminders[chat_id][reminder][1]=True
 				allreminder[chat_id][reminder][1]=True
 
