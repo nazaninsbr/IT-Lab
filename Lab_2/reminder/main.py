@@ -14,7 +14,7 @@ bot = telepot.Bot(TOKEN)
 
 allreminder = {}
 brokenReminder = {}
-voice_message =  gTTS(text='Hi! this is a reminder', lang='en', slow=False)
+voice_message =  gTTS(text='Hi! this is your reminder', lang='en', slow=False)
 voice_message.save("reminder.mp3")
 
 
@@ -40,12 +40,13 @@ def handle(msg):
 
 	if content_type=='text':
 		if msg['text'] == '/start':
-			bot.sendMessage(chat_id, 
+			bot.sendMessage(chat_id, 'custom keyboard',
 							reply_markup=ReplyKeyboardMarkup(
 								keyboard=[
 									[KeyboardButton(text="Done"), KeyboardButton(text="All")]
 								]
 							))
+			bot.sendMessage(chat_id, 'please use this format to add notifications-> + notif_name 1/12/2018T9:01')
 		elif msg['text'] == 'Done':
 			bot.sendMessage(chat_id, 'Reminders added!')
 		elif msg['text'] == 'All':
