@@ -117,7 +117,6 @@ def handle(msg):
 					elif len(reminder_so_far)==2:
 						if splitted_text[0]=='today':
 							now = datetime.now()
-							now = now.strftime('%d/%m/%Y')
 							incomplete_reminders[chat_id].append(now)
 						else:
 							try:
