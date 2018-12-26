@@ -102,22 +102,26 @@ def handle(msg):
 						datetime_object = jalali.Persian(datetime_object.year, datetime_object.month, datetime_object.day).gregorian_datetime()
 					allreminder[chat_id][splitted_text[1]] = [datetime_object, False]
 					insert_in_the_tables(chat_id, splitted_text[1], splitted_text[2], conn, c)
+					bot.sendMessage(chat_id, 'Reminder added successfully!:)')
 				elif splitted_text[0] == '-':
 					print('deleting')
 					datetime_object = datetime.strptime(splitted_text[2], '%d/%m/%YT%H:%M')
 					if splitted_text[1] in allreminder[chat_id].keys() and allreminder[chat_id][splitted_text[1]][0] == datetime_object:
 						del allreminder[chat_id][splitted_text[1]]
 						delete_notif(c, chat_id, splitted_text[1], conn)
+					bot.sendMessage(chat_id, 'Reminder deleted successfully!:)')
 			elif len(splitted_text)==1:
 				if chat_id in incomplete_reminders.keys():
 					reminder_so_far = incomplete_reminders[chat_id]
 					print(reminder_so_far)
 					if len(reminder_so_far)==1:
 						incomplete_reminders[chat_id].append(splitted_text[0])
+						bot.sendMessage(chat_id, 'When? (please enter a date) (ex.: today or 26/12/2018)')
 					elif len(reminder_so_far)==2:
 						if splitted_text[0]=='today':
 							now = datetime.now()
 							incomplete_reminders[chat_id].append(now)
+							bot.sendMessage(chat_id, 'What time? (ex.: 8:40)')
 						else:
 							try:
 								datetime_object = datetime.strptime(splitted_text[0], '%d/%m/%Y')
@@ -127,6 +131,7 @@ def handle(msg):
 									datetime_object = datetime_object.replace(month = jalali_datetime_object.month)
 									datetime_object = datetime_object.replace(day = jalali_datetime_object.day)
 								incomplete_reminders[chat_id].append(datetime_object)
+								bot.sendMessage(chat_id, 'What time? (ex.: 8:40)')
 							except Exception as e:
 								bot.sendMessage(chat_id, 'the date you entered has invalid format please enter a date with the following format: 16/11/2018')
 					elif len(reminder_so_far)==3:
@@ -137,13 +142,17 @@ def handle(msg):
 						if incomplete_reminders[chat_id][0]=='add' or incomplete_reminders[chat_id][0]=='Add' or incomplete_reminders[chat_id][0]=='+':
 							allreminder[chat_id][incomplete_reminders[chat_id][1]] = [datetime_object, False]
 							insert_in_the_tables(chat_id, incomplete_reminders[chat_id][1], datetime_object.strftime('%d/%m/%YT%H:%M'), conn, c)
+							bot.sendMessage(chat_id, 'Reminder added successfully!:)')
 						elif incomplete_reminders[chat_id][0]=='del' or incomplete_reminders[chat_id][0]=='delete' or incomplete_reminders[chat_id][0]=='-':
 							if incomplete_reminders[chat_id][1] in allreminder[chat_id].keys() and allreminder[chat_id][incomplete_reminders[chat_id][1]][0] == datetime_object:
 								del allreminder[chat_id][incomplete_reminders[chat_id][1]]
 								delete_notif(c, chat_id, incomplete_reminders[chat_id][1], conn)
+								bot.sendMessage(chat_id, 'Reminder deleted successfully!:)')
 						incomplete_reminders.pop(chat_id, None)
+
 				else:
 					incomplete_reminders[chat_id] = [splitted_text[0]]
+					bot.sendMessage(chat_id, 'What is this reminder for? (please enter a name) (ex.: Reminder1)')
 			else:
 				bot.sendMessage(chat_id, 'invalid format, please use this format: + notif_name date')
 
